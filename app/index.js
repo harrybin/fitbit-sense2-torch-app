@@ -11,11 +11,14 @@ const face = document.getElementById("face");
 let orgBrightness = display.brightnessOverride;
 let isExiting = false;
 
+console.log("me", JSON.stringify(me));
+console.log("display", JSON.stringify(display));
+
 const turnOn = () => {
-  display.brightnessOverride = "max";
   display.autoOff = false;
   display.on = true;
   display.poke();
+  display.brightnessOverride = "max";
 };
 
 const turnOff = () => {
@@ -26,11 +29,17 @@ const turnOff = () => {
 
 turnOn();
 
+// turn off after 3 minutes anyway
 setInterval(() => {
-  if (!isExiting) {
-    turnOn();
-  }
+  turnOn();
 }, 1500);
+
+setTimeout(() => {
+  if (!isExiting) {
+    turnOff();
+    app.exit();
+  }
+}, 1000 * 60 * 3); // 3 min
 
 display.addEventListener("change", () => {
   if (!display.on && !isExiting) {
@@ -40,12 +49,10 @@ display.addEventListener("change", () => {
 
 face.addEventListener("click", (evt) => {
   face.animate("click");
-  display.brightnessOverride = orgBrightness;
-  isExiting = true;
-  appbit.exit();
+  turnOff();
 });
 
-appbit.onunload = () => {
+me.onunload = () => {
   display.brightnessOverride = orgBrightness;
   isExiting = true;
   turnOff();
