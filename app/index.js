@@ -25,6 +25,7 @@ const turnOff = () => {
   display.brightnessOverride = orgBrightness;
   display.autoOff = true;
   display.on = false;
+  me.exit();
 };
 
 turnOn();
@@ -37,7 +38,6 @@ setInterval(() => {
 setTimeout(() => {
   if (!isExiting) {
     turnOff();
-    app.exit();
   }
 }, 1000 * 60 * 3); // 3 min
 
